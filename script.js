@@ -1,3 +1,9 @@
+let calculator = document.querySelector('#js-calculator');
+let display = document.querySelector('#js-display');
+let digits = Array.from(document.querySelector('.js-digits').children);
+let operators = Array.from(document.querySelector('.js-operators').children);
+
+
 function add (a, b) {
     let result = parseFloat(a) === parseInt(a) && parseFloat(b) === parseInt(b) ?
         (a + b).toFixed(0) : 
@@ -26,8 +32,6 @@ function divide (a, b) {
 
 return result;
 }
-
-//don't forget to pass a math operator as a string
 function operate([operator, a, b]) {
     switch (operator.toString()) {
         case '+':
@@ -41,3 +45,21 @@ function operate([operator, a, b]) {
     }
 }
 
+let equation = [];
+
+function inputNum() {
+    digits.forEach(digit => digit.addEventListener('click', () => {
+        display.value += digit.textContent;
+        equation.push(digit.textContent);
+    }));
+}
+
+function inputOperator() {
+    operators.forEach(operator => operator.addEventListener('click', () => {
+        display.value += operator.textContent;
+        equation.push(operator.textContent);
+    }));
+}
+
+inputNum();
+inputOperator();
