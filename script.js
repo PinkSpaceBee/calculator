@@ -32,7 +32,7 @@ function divide (a, b) {
 
 return result;
 }
-function operate([operator, a, b]) {
+function operate([a, operator, b]) {
     switch (operator.toString()) {
         case '+':
             return add(a, b);
@@ -45,21 +45,55 @@ function operate([operator, a, b]) {
     }
 }
 
-let equation = [];
+let equationString = [];
+foo();
+//inputNum();
+//inputOperator();
+let test = function() {
+
+}
+
+let y = [...equationString];
+//y.join('').split(' ').map(x => isNaN(parseFloat(x)) ? x : parseFloat(x));
 
 function inputNum() {
     digits.forEach(digit => digit.addEventListener('click', () => {
         display.value += digit.textContent;
-        equation.push(digit.textContent);
+        equationString.push(digit.textContent);
     }));
+    return equationString;
 }
 
 function inputOperator() {
     operators.forEach(operator => operator.addEventListener('click', () => {
         display.value += operator.textContent;
-        equation.push(operator.textContent);
+        equationString.push(' ',operator.textContent,' ');
     }));
 }
 
-inputNum();
-inputOperator();
+function foo() {
+    digits.forEach(digit => digit.addEventListener('click', () => {
+        equationString.push('1');
+    }))
+}
+
+/* calculator draft
+let button = document.querySelector('#push-btn');
+
+let arr = [];
+let arrC1 = [];
+foo();
+
+
+function foo() {
+    button.addEventListener('click', () => {
+        arr.push('1');
+        //arrC1.push('1');
+        arrC1 = [...arr];
+    });
+}
+
+let baz = function() {
+    let arrC = [...arr];
+   
+*/
