@@ -28,7 +28,8 @@ function multiply(a, b) {
     return result;
 }
 function divide(a, b) {
-    let result = parseFloat(a / b) === parseInt(a / b) ? 
+    let result = b === 0? 'x_x' :
+        parseFloat(a / b) === parseInt(a / b) ? 
         (a / b).toFixed(0) :
         (a / b).toFixed(1);
     
@@ -70,7 +71,6 @@ calculateBtn.addEventListener('click', () => {
     result.textContent = operate(parseEquation(equationStr));
 
 });
-
 clearBtn.addEventListener('click', () => {
     equationStr = [];
     result.textContent = 0;
