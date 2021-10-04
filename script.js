@@ -7,32 +7,32 @@ let calculateBtn = document.querySelector('#js-calculate');
 let clearBtn = document.querySelector('#js-clear');
 
 function add(a, b) {
-    let result = parseFloat(a) === parseInt(a) && parseFloat(b) === parseInt(b) ?
-        (a + b).toFixed(0) : 
+    let result = parseFloat(a + b) === parseInt(a + b) ? 
+        (a + b).toFixed(0) :
         (a + b).toFixed(1);
-
+    
     return result;
 }
 function substract(a, b) {
-    let result = parseFloat(a) === parseInt(a) && parseFloat(b) === parseInt(b) ?
-        (a - b).toFixed(0) : 
+    let result = parseFloat(a - b) === parseInt(a - b) ? 
+        (a - b).toFixed(0) :
         (a - b).toFixed(1);
-
+    
     return result;
 }
 function multiply(a, b) {
-    let result = parseFloat(a) === parseInt(a) && parseFloat(b) === parseInt(b) ?
-        (a * b).toFixed(0) : 
+    let result = parseFloat(a * b) === parseInt(a * b) ? 
+        (a * b).toFixed(0) :
         (a * b).toFixed(1);
-
+    
     return result;
 }
 function divide(a, b) {
-    let result = parseFloat(a) === parseInt(a) && parseFloat(b) === parseInt(b) ?
-    (a / b).toFixed(0) : 
-    (a / b).toFixed(1);
-
-return result;
+    let result = parseFloat(a / b) === parseInt(a / b) ? 
+        (a / b).toFixed(0) :
+        (a / b).toFixed(1);
+    
+    return result;
 }
 function operate([a, operator, b]) {
     switch (operator.toString()) {
