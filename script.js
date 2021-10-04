@@ -1,31 +1,33 @@
 let calculator = document.querySelector('#js-calculator');
-let display = document.querySelector('#js-display');
+let equation = document.querySelector('#js-equation');
 let digits = Array.from(document.querySelector('.js-digits').children);
 let operators = Array.from(document.querySelector('.js-operators').children);
+let result = document.querySelector('#js-result');
+let calculateBtn = document.querySelector('#js-calculate');
+let clearBtn = document.querySelector('#js-clear');
 
-
-function add (a, b) {
+function add(a, b) {
     let result = parseFloat(a) === parseInt(a) && parseFloat(b) === parseInt(b) ?
         (a + b).toFixed(0) : 
         (a + b).toFixed(1);
 
     return result;
 }
-function substract (a, b) {
+function substract(a, b) {
     let result = parseFloat(a) === parseInt(a) && parseFloat(b) === parseInt(b) ?
         (a - b).toFixed(0) : 
         (a - b).toFixed(1);
 
     return result;
 }
-function multiply (a, b) {
+function multiply(a, b) {
     let result = parseFloat(a) === parseInt(a) && parseFloat(b) === parseInt(b) ?
         (a * b).toFixed(0) : 
         (a * b).toFixed(1);
 
     return result;
 }
-function divide (a, b) {
+function divide(a, b) {
     let result = parseFloat(a) === parseInt(a) && parseFloat(b) === parseInt(b) ?
     (a / b).toFixed(0) : 
     (a / b).toFixed(1);
@@ -45,55 +47,34 @@ function operate([a, operator, b]) {
     }
 }
 
-let equationString = [];
-foo();
-//inputNum();
-//inputOperator();
-let test = function() {
+let equationStr = [];
+inputEquation();
+parseEquation(equationStr);
 
-}
-
-let y = [...equationString];
-//y.join('').split(' ').map(x => isNaN(parseFloat(x)) ? x : parseFloat(x));
-
-function inputNum() {
+function inputEquation() {
     digits.forEach(digit => digit.addEventListener('click', () => {
-        display.value += digit.textContent;
-        equationString.push(digit.textContent);
+        equation.value += digit.textContent;
+        equationStr.push(digit.textContent);
+        y = [...equationStr];
     }));
-    return equationString;
-}
-
-function inputOperator() {
     operators.forEach(operator => operator.addEventListener('click', () => {
-        display.value += operator.textContent;
-        equationString.push(' ',operator.textContent,' ');
+        equation.value += operator.textContent;
+        equationStr.push(' ',operator.textContent,' ');
     }));
 }
-
-function foo() {
-    digits.forEach(digit => digit.addEventListener('click', () => {
-        equationString.push('1');
-    }))
+function parseEquation(arr) {
+    return arr.join('').split(' ').map(x => isNaN(parseFloat(x)) ? x : parseFloat(x));
 }
 
-/* calculator draft
-let button = document.querySelector('#push-btn');
+calculateBtn.addEventListener('click', () => {
+    result.textContent = operate(parseEquation(equationStr));
 
-let arr = [];
-let arrC1 = [];
-foo();
+});
+
+clearBtn.addEventListener('click', () => {
+    equationStr = [];
+    result.textContent = 0;
+    equation.value = '';
+});
 
 
-function foo() {
-    button.addEventListener('click', () => {
-        arr.push('1');
-        //arrC1.push('1');
-        arrC1 = [...arr];
-    });
-}
-
-let baz = function() {
-    let arrC = [...arr];
-   
-*/
