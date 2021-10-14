@@ -7,11 +7,9 @@ let calculateBtn = document.querySelector('#js-calculate');
 let clearBtn = document.querySelector('#js-clear');
 
 function add(a, b) {
-    let result = parseFloat(a + b) === parseInt(a + b) ? 
-        (a + b).toFixed(0) :
-        (a + b).toFixed(1);
-    
-    return result;
+    let result = parseFloat(a) + parseFloat(b);
+    return result * 100 / 100;
+    //return Math.floor((result * 100) / 100);
 }
 function substract(a, b) {
     let result = parseFloat(a - b) === parseInt(a - b) ? 
@@ -35,7 +33,7 @@ function divide(a, b) {
     
     return result;
 }
-function operate([a, operator, b]) {
+function operate(a, operator, b) {
     switch (operator.toString()) {
         case '+':
             return add(a, b);
@@ -48,33 +46,52 @@ function operate([a, operator, b]) {
     }
 }
 
-let equationStr = [];
-inputEquation();
-parseEquation(equationStr);
+let a = '';
+let o = '';
+let b = '';
+let idk;
+let test = document.querySelector('#js-test');
+
+digits.forEach(digit => digit.addEventListener('click', inputEquation));
+operators.forEach(operator => operator.addEventListener('click', inputEquation))
+let point = document.querySelector('#js-point');
+
+function parseNum(str) {
+    let decimal = str.substr(str.lastIndexOf('.'), 2);
+
+    if (str.includes('.')) {
+        str = parseInt(str) + decimal;
+    } else {
+        str = parseInt(str) + '';
+    }
+
+    return str;
+}
 
 function inputEquation() {
-    digits.forEach(digit => digit.addEventListener('click', () => {
-        equation.value += digit.textContent;
-        equationStr.push(digit.textContent);
-        y = [...equationStr];
-    }));
-    operators.forEach(operator => operator.addEventListener('click', () => {
-        equation.value += operator.textContent;
-        equationStr.push(' ',operator.textContent,' ');
-    }));
-}
-function parseEquation(arr) {
-    return arr.join('').split(' ').map(x => isNaN(parseFloat(x)) ? x : parseFloat(x));
+        if (this.textContent !== '+' && o === '') {
+            a += this.textContent;
+            a = parseNum(a);
+            equation.value = a;
+            test.textContent = parseFloat(a);
+        } else if (this.textContent === '+') {
+            o = this.textContent;
+            equation.value = o, 
+            test.textContent = parseFloat(a + o);
+        } else if (a !== 0 && o !== 0) {
+                b += this.textContent;
+                b = parseNum(b);
+                equation.value = b, 
+                test.textContent = parseFloat(a) + o + parseFloat(b);
+        } 
 }
 
 calculateBtn.addEventListener('click', () => {
-    result.textContent = operate(parseEquation(equationStr));
-
+    result.textContent = operate(a,o,b);
 });
 clearBtn.addEventListener('click', () => {
     equationStr = [];
+    a = 0;
     result.textContent = 0;
     equation.value = '';
 });
-
-
