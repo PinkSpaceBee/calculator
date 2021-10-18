@@ -1,6 +1,7 @@
 let calculator = document.querySelector('#js-calculator');
-let equation = document.querySelector('#js-equation');
+let input = document.querySelector('#js-input');
 let digits = Array.from(document.querySelector('.js-digits').children);
+let point = document.querySelector('#js-point');
 let operators = Array.from(document.querySelector('.js-operators').children);
 let result = document.querySelector('#js-result');
 let calculateBtn = document.querySelector('#js-calculate');
@@ -49,12 +50,10 @@ function operate(a, operator, b) {
 let a = '';
 let o = '';
 let b = '';
-let idk;
-let test = document.querySelector('#js-test');
+let equation = document.querySelector('#js-equation');
 
 digits.forEach(digit => digit.addEventListener('click', inputEquation));
 operators.forEach(operator => operator.addEventListener('click', inputEquation))
-let point = document.querySelector('#js-point');
 
 function parseNum(str) {
     let decimal = str.substr(str.lastIndexOf('.'), 2);
@@ -72,17 +71,17 @@ function inputEquation() {
         if (this.textContent !== '+' && o === '') {
             a += this.textContent;
             a = parseNum(a);
-            equation.value = a;
-            test.textContent = parseFloat(a);
+            input.value = a;
+            equation.textContent = parseFloat(a);
         } else if (this.textContent === '+') {
             o = this.textContent;
-            equation.value = o, 
-            test.textContent = parseFloat(a + o);
+            input.value = o, 
+            equation.textContent = parseFloat(a + o);
         } else if (a !== 0 && o !== 0) {
                 b += this.textContent;
                 b = parseNum(b);
-                equation.value = b, 
-                test.textContent = parseFloat(a) + o + parseFloat(b);
+                input.value = b, 
+                equation.textContent = parseFloat(a) + o + parseFloat(b);
         } 
 }
 
@@ -90,8 +89,12 @@ calculateBtn.addEventListener('click', () => {
     result.textContent = operate(a,o,b);
 });
 clearBtn.addEventListener('click', () => {
-    equationStr = [];
-    a = 0;
-    result.textContent = 0;
-    equation.value = '';
+    a = '';
+    o = '';
+    b = '';
+    input.value = '';
+    equation.textContent = '';
+    result.textContent = '';
 });
+
+
