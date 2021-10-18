@@ -53,7 +53,7 @@ let b = '';
 let equation = document.querySelector('#js-equation');
 
 digits.forEach(digit => digit.addEventListener('click', inputEquation));
-operators.forEach(operator => operator.addEventListener('click', inputEquation))
+operators.forEach(operator => operator.addEventListener('click', inputEquation));
 
 function parseNum(str) {
     let decimal = str.substr(str.lastIndexOf('.'), 2);
@@ -67,26 +67,33 @@ function parseNum(str) {
     return str;
 }
 
-function inputEquation() {
-        if (this.textContent !== '+' && o === '') {
+function inputEquation(e) {
+        if (!operators.includes(e.target) && o === '') {
             a += this.textContent;
             a = parseNum(a);
             input.value = a;
             equation.textContent = parseFloat(a);
-        } else if (this.textContent === '+') {
+        } else if (operators.includes(e.target)) {
             o = this.textContent;
             input.value = o, 
             equation.textContent = parseFloat(a + o);
-        } else if (a !== 0 && o !== 0) {
+        } else if (a !== '' && o !== '') {
                 b += this.textContent;
                 b = parseNum(b);
                 input.value = b, 
-                equation.textContent = parseFloat(a) + o + parseFloat(b);
+                equation.textContent =  `${parseFloat(a)}${o}${parseFloat(b)}`;
         } 
 }
 
-calculateBtn.addEventListener('click', () => {
+function test() {
     result.textContent = operate(a,o,b);
+    a = result.textContent;
+    o = '';
+    b = '';
+}
+
+calculateBtn.addEventListener('click', () => {
+test();
 });
 clearBtn.addEventListener('click', () => {
     a = '';
