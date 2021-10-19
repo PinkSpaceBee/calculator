@@ -68,21 +68,30 @@ function parseNum(str) {
 }
 
 function inputEquation(e) {
-        if (!operators.includes(e.target) && o === '') {
-            a += this.textContent;
-            a = parseNum(a);
-            input.value = a;
-            equation.textContent = parseFloat(a);
-        } else if (operators.includes(e.target)) {
-            o = this.textContent;
-            input.value = o, 
-            equation.textContent = parseFloat(a + o);
-        } else if (a !== '' && o !== '') {
-                b += this.textContent;
-                b = parseNum(b);
-                input.value = b, 
-                equation.textContent =  `${parseFloat(a)}${o}${parseFloat(b)}`;
-        } 
+    if (b !== '' && operators.includes(e.target)) {
+        test();
+        o = this.textContent;
+        input.value = o, 
+        equation.textContent = `${parseFloat(a)}${o}`;
+        console.log(`00 ${this.textContent} ${a} ${o === ''} ${b === ''}`);
+    } else if (a !== '' && o !== '') {
+        b += this.textContent;
+        b = parseNum(b);
+        input.value = b, 
+        equation.textContent =  `${parseFloat(a)}${o}${parseFloat(b)}`;
+        console.log(`01 ${a === ''} ${o === ''} ${b === ''}`);
+    } else if (operators.includes(e.target)) {
+        o = this.textContent;
+        input.value = o, 
+        equation.textContent = `${parseFloat(a)}${o}`;
+        console.log(`02 ${a === ''} ${o === ''} ${b === ''}`);
+    } else if (!operators.includes(e.target) && o === '') {
+        a += this.textContent;
+        a = parseNum(a);
+        input.value = a;
+        equation.textContent = parseFloat(a);
+        console.log(`03 ${a === ''} ${o === ''} ${b === ''}`);
+    }
 }
 
 function test() {
