@@ -9,30 +9,19 @@ let clearBtn = document.querySelector('#js-clear');
 
 function add(a, b) {
     let result = parseFloat(a) + parseFloat(b);
-    return result * 100 / 100;
-    //return Math.floor((result * 100) / 100);
+    return (result * 100 / 100).toFixed(1);
 }
 function substract(a, b) {
-    let result = parseFloat(a - b) === parseInt(a - b) ? 
-        (a - b).toFixed(0) :
-        (a - b).toFixed(1);
-    
-    return result;
+    let result = parseFloat(a) - parseFloat(b);
+    return (result * 100 / 100).toFixed(1);
 }
 function multiply(a, b) {
-    let result = parseFloat(a * b) === parseInt(a * b) ? 
-        (a * b).toFixed(0) :
-        (a * b).toFixed(1);
-    
-    return result;
+    let result = parseFloat(a) * parseFloat(b);
+    return (result * 100 / 100).toFixed(1);
 }
 function divide(a, b) {
-    let result = b === 0? 'x_x' :
-        parseFloat(a / b) === parseInt(a / b) ? 
-        (a / b).toFixed(0) :
-        (a / b).toFixed(1);
-    
-    return result;
+    let result = parseFloat(a) / parseFloat(b);
+    return (result * 100 / 100).toFixed(1);
 }
 function operate(a, operator, b) {
     switch (operator.toString()) {
