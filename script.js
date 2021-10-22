@@ -6,22 +6,23 @@ let operators = Array.from(document.querySelector('.js-operators').children);
 let result = document.querySelector('#js-result');
 let calculateBtn = document.querySelector('#js-calculate');
 let clearBtn = document.querySelector('#js-clear');
+let undoBtn = document.querySelector('#js-undo');
 
 function add(a, b) {
-    let result = parseFloat(a) + parseFloat(b);
-    return (result * 100 / 100).toFixed(1);
+    let result = Math.floor((+a + +b) * 10) / 10;
+    return result;
 }
 function substract(a, b) {
-    let result = parseFloat(a) - parseFloat(b);
-    return (result * 100 / 100).toFixed(1);
+    let result = Math.floor((a - b) * 10) / 10;
+    return result;
 }
 function multiply(a, b) {
-    let result = parseFloat(a) * parseFloat(b);
-    return (result * 100 / 100).toFixed(1);
+    let result = Math.floor((a * b) * 10) / 10;
+    return result;
 }
 function divide(a, b) {
-    let result = parseFloat(a) / parseFloat(b);
-    return (result * 100 / 100).toFixed(1);
+    let result = Math.floor((a / b) * 10) / 10;
+    return result;
 }
 function operate(a, operator, b) {
     switch (operator.toString()) {
@@ -37,67 +38,104 @@ function operate(a, operator, b) {
 }
 
 let a = '';
-let o = '';
+let operator = '';
 let b = '';
 let equation = document.querySelector('#js-equation');
 
 digits.forEach(digit => digit.addEventListener('click', inputEquation));
 operators.forEach(operator => operator.addEventListener('click', inputEquation));
-
-function parseNum(str) {
-    let decimal = str.substr(str.lastIndexOf('.'), 2);
-
-    if (str.includes('.')) {
-        str = parseInt(str) + decimal;
-    } else {
-        str = parseInt(str) + '';
-    }
-
-    return str;
-}
+input.addEventListener('input', inputEquation);
 
 function inputEquation(e) {
-    if (b !== '' && operators.includes(e.target)) {
-        test();
-        o = this.textContent;
-        input.value = o, 
-        equation.textContent = `${parseFloat(a)}${o}`;
-        console.log(`00 ${this.textContent} ${a} ${o === ''} ${b === ''}`);
-    } else if (a !== '' && o !== '') {
-        b += this.textContent;
-        b = parseNum(b);
-        input.value = b, 
-        equation.textContent =  `${parseFloat(a)}${o}${parseFloat(b)}`;
-        console.log(`01 ${a === ''} ${o === ''} ${b === ''}`);
-    } else if (operators.includes(e.target)) {
-        o = this.textContent;
-        input.value = o, 
-        equation.textContent = `${parseFloat(a)}${o}`;
-        console.log(`02 ${a === ''} ${o === ''} ${b === ''}`);
-    } else if (!operators.includes(e.target) && o === '') {
-        a += this.textContent;
-        a = parseNum(a);
-        input.value = a;
-        equation.textContent = parseFloat(a);
-        console.log(`03 ${a === ''} ${o === ''} ${b === ''}`);
+    function parseNum(str) {
+        let decimal = str.substr(str.lastIndexOf('.'), 2);
+    
+        if (str.includes('.')) {
+            str = parseInt(str) + decimal;
+        } else {
+            str = parseInt(str) + '';
+        }
+    
+        return str;
+    }
+    function isOperator(e) {
+        return operators.includes(e.target);
+    }
+
+    calculateBtn.disabled = true;
+
+    if (isOperator(e)) {
+        if (b === '') { 
+            if (a === '') {
+                if (this.textContent === '-') {
+                    a = this.textContent;
+                    input.textContent = a;
+                } else {}
+            } else {
+                operator = this.textContent;
+                input.textContent = operator;
+                equation.textContent = `${parseNum(a)}${operator}`;
+            }
+        } else {
+            calculate();
+            operator = this.textContent;
+            input.textContent = operator;
+            equation.textContent = `${parseNum(a)}${operator}`;
+        }
+    } else {
+        if (this.textContent === '.') {
+            if (operator === '') {
+                if (a === '') {
+                    a = '0.';
+                    input.textContent = a;
+                } else {
+                    a += this.textContent;
+                    a = parseNum(a);
+                    input.textContent = a;
+                }
+            } else {
+                if (b === '') {
+                    b = '0.';
+                    input.textContent = b;
+                } else {
+                    b += this.textContent;
+                    b = parseNum(b);
+                    input.textContent = b;
+                }
+            }
+        } else {
+            if (operator === '') {
+                a += this.textContent;
+                a = parseNum(a);
+                input.textContent = a;
+            } else {
+                b += this.textContent;
+                b = parseNum(b);
+                input.textContent = b;
+                equation.textContent = `${parseNum(a)}${operator}${parseNum(b)}`;
+                calculateBtn.disabled = false;
+            }
+        }
     }
 }
 
-function test() {
-    result.textContent = operate(a,o,b);
+function calculate() {
+    result.textContent = operate(a,operator,b);
     a = result.textContent;
-    o = '';
+    operator = '';
     b = '';
 }
 
 calculateBtn.addEventListener('click', () => {
-test();
+calculate();
+console.log(a);
+a = '';
 });
 clearBtn.addEventListener('click', () => {
     a = '';
-    o = '';
+    operator = '';
     b = '';
-    input.value = '';
+    input.textContent = '';
     equation.textContent = '';
     result.textContent = '';
 });
