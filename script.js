@@ -41,23 +41,66 @@ let a = '';
 let operator = '';
 let b = '';
 let equation = document.querySelector('#js-equation');
-
+/*
+['click', 'keydown'].forEach(e => digits.forEach(digit => digit.addEventListener(e, inputEquation)));
+*/
 digits.forEach(digit => digit.addEventListener('click', inputEquation));
+
 operators.forEach(operator => operator.addEventListener('click', inputEquation));
 input.addEventListener('input', inputEquation);
 
-function inputEquation(e) {
-    function parseNum(str) {
-        let decimal = str.substr(str.lastIndexOf('.'), 2);
-    
-        if (str.includes('.')) {
-            str = parseInt(str) + decimal;
-        } else {
-            str = parseInt(str) + '';
-        }
-    
-        return str;
+window.addEventListener('keydown', inputEquationKeys);
+
+function parseNum(str) {
+    let decimal = str.substr(str.lastIndexOf('.'), 2);
+
+    if (str === '-') {
+        str = '-'
+    } else
+    if (str.includes('.')) {
+        str = parseInt(str) + decimal;
+    } else {
+        str = parseInt(str) + '';
     }
+
+    return str;
+}
+
+function inputEquationKeys(e) {
+    let digitsStr = [];
+    let operatorsStr = [];
+    digits.forEach(i => digitsStr.push(i.textContent));
+    operators.forEach(i => operatorsStr.push(i.textContent));
+
+    if (e.key === '=') {
+        calculate();
+        calculateBtn.disabled = true;
+    } else if (operatorsStr.includes(e.key) && b !== '') {
+        calculate();
+        operator = e.key;
+        input.textContent = operator;
+        equation.textContent = `${parseNum(a)}${operator}`;
+    } else if (digitsStr.includes(e.key) && operator !== '') {
+        b += e.key;
+        b = parseNum(b);
+        calculateBtn.disabled = false;
+        equation.textContent = `${a}${operator}${b}`;
+    } else if (a !== '' && operatorsStr.includes(e.key)) {
+        operator = e.key;
+        equation.textContent = `${a}${operator}`
+    } else if (digitsStr.includes(e.key) || e.key === '-') {
+        a += e.key;
+        a = parseNum(a);
+        input.textContent = a;
+    } else if (e.key === 'Backspace') {
+        console.log(`00 ${e.key}`);
+        undo();
+    }
+ }
+
+function inputEquation(e) {
+
+
     function isOperator(e) {
         return operators.includes(e.target);
     }
@@ -66,18 +109,12 @@ function inputEquation(e) {
 
     if (isOperator(e)) {
         if (b === '') { 
-            if (a === '') {
-                if (this.textContent === '-') {
-                    a = this.textContent;
-                    input.textContent = a;
-                } else {}
-            } else {
                 operator = this.textContent;
                 input.textContent = operator;
                 equation.textContent = `${parseNum(a)}${operator}`;
-            }
         } else {
             calculate();
+
             operator = this.textContent;
             input.textContent = operator;
             equation.textContent = `${parseNum(a)}${operator}`;
@@ -105,7 +142,9 @@ function inputEquation(e) {
             }
         } else {
             if (operator === '') {
+                //a += e.key;
                 a += this.textContent;
+                //console.log(typeof e.key);
                 a = parseNum(a);
                 input.textContent = a;
             } else {
@@ -126,10 +165,25 @@ function calculate() {
     b = '';
 }
 
+function undo () {
+    equation.textContent = equation.textContent.slice(0, -1);
+    input.textContent = input.textContent.slice(0, -1);
+
+    if(operator === '') {
+        a = a.slice(0, -1);
+    } else if (b === '') {
+        operator = '';
+    } else {
+        b = b.slice(0, -1);
+    }
+}
+
+undoBtn.addEventListener('click', () => {
+    undo();
+})
 calculateBtn.addEventListener('click', () => {
 calculate();
-console.log(a);
-a = '';
+calculateBtn.disabled = true;
 });
 clearBtn.addEventListener('click', () => {
     a = '';
