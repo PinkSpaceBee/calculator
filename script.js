@@ -1,6 +1,9 @@
 let calculator = document.querySelector('#js-calculator');
 let input = document.querySelector('#js-input');
-let digits = Array.from(document.querySelector('.js-digits').children);
+//let digits1 = Array.from(document.querySelector('.js-digits').children);
+//let digits2 = Array.from(document.querySelector('.digits-bottom-row').children);
+//let digits = [...digits1, ...digits2];
+let digits = Array.from(document.querySelector('.js-digits').querySelectorAll('*'));
 let point = document.querySelector('#js-point');
 let operators = Array.from(document.querySelector('.js-operators').children);
 let result = document.querySelector('#js-result');
