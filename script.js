@@ -41,9 +41,7 @@ let a = '';
 let operator = '';
 let b = '';
 let equation = document.querySelector('#js-equation');
-/*
-['click', 'keydown'].forEach(e => digits.forEach(digit => digit.addEventListener(e, inputEquation)));
-*/
+
 digits.forEach(digit => digit.addEventListener('click', inputEquation));
 
 operators.forEach(operator => operator.addEventListener('click', inputEquation));
@@ -88,12 +86,12 @@ function inputEquationKeys(e) {
         b = parseNum(b);
         input.textContent = b;
         equation.textContent = `${a}${operator}${b}`;
+
         calculateBtn.disabled = false;
     } else if (a === '' && e.key === '-') {
         a = '-';
         input.textContent = a; 
         equation.textContent = a;
-        console.log(e.key);
     } else if (digitsStr.includes(e.key)) {
         a += e.key;
         a = parseNum(a);
@@ -101,71 +99,7 @@ function inputEquationKeys(e) {
         equation.textContent = a;
     }
 }
-/*
-function inputEquation(e) {
 
-
-    function isOperator(e) {
-        return operators.includes(e.target);
-    }
-
-    calculateBtn.disabled = true;
-
-    if (isOperator(e)) {
-        if (a === '') {
-            a = '-';
-            input.textContent = a;
-            equation.textContent = a;
-        } else if (b === '') { 
-                operator = this.textContent;
-                input.textContent = operator;
-                equation.textContent = `${parseNum(a)}${operator}`;
-        } else {
-            calculate();
-
-            operator = this.textContent;
-            input.textContent = operator;
-            //equation.textContent = `${parseNum(a)}${operator}`;
-        }
-    } else {
-        if (this.textContent === '.') {
-            if (operator === '') {
-                if (a === '') {
-                    a = '0.';
-                    input.textContent = a;
-                } else {
-                    a += this.textContent;
-                    a = parseNum(a);
-                    input.textContent = a;
-                }
-            } else {
-                if (b === '') {
-                    b = '0.';
-                    input.textContent = b;
-                } else {
-                    b += this.textContent;
-                    b = parseNum(b);
-                    input.textContent = b;
-                }
-            }
-        } else {
-            if (operator === '') {
-                //a += e.key;
-                a += this.textContent;
-                //console.log(typeof e.key);
-                a = parseNum(a);
-                input.textContent = a;
-            } else {
-                b += this.textContent;
-                b = parseNum(b);
-                input.textContent = b;
-                equation.textContent = `${parseNum(a)}${operator}${parseNum(b)}`;
-                calculateBtn.disabled = false;
-            }
-        }
-    }
-}
-*/
 
 function inputEquation(e) {
     function isOperator(e) {
@@ -244,7 +178,6 @@ calculateBtn.addEventListener('click', () => {
 calculate();
 calculateBtn.disabled = true;
 });
-
 clearBtn.addEventListener('click', () => {
     clear();
 })
