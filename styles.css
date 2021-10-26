@@ -1,0 +1,42 @@
+body {
+    display: grid;
+    justify-content: center;
+}
+
+#js-calculator {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    width: 400px;
+    height: 550px;
+    border: 2px solid pink;
+    padding: 30px 20px;
+}
+
+.display {
+    display: grid;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    border: 2px solid pink;
+}
+
+.js-digits { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px;
+    padding: 20px 0;
+    background-color: aliceblue;
+}
+
+.digits-bottom-row {
+    display: grid; 
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-template-columns: 1fr 2fr;
+    gap: 4px;
+}
+
+.js-operators {
+    display: grid;
+    gap: 4px;
+    padding: 20px 4px;
+}
