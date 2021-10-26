@@ -144,6 +144,7 @@ function calculate() {
         a = result.textContent;
         operator = '';
         b = '';
+        input.textContent = '';
     }  else {
         clear();
     }
