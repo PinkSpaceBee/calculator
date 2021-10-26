@@ -54,9 +54,6 @@ window.addEventListener('keydown', inputEquationKeys);
 function parseNum(str) {
     let decimal = str.substr(str.lastIndexOf('.'), 2);
 
-    if (str === '-') {
-        str = '-'
-    } else
     if (str.includes('.')) {
         str = parseInt(str) + decimal;
     } else {
@@ -75,29 +72,36 @@ function inputEquationKeys(e) {
     if (e.key === '=') {
         calculate();
         calculateBtn.disabled = true;
+    } else if (e.key === 'Backspace') {
+        undo();
     } else if (operatorsStr.includes(e.key) && b !== '') {
         calculate();
+        operator = e.key;
+        input.textContent = operator;
+        equation.textContent = isFinite(parseNum(a)) ?`${parseNum(a)}${operator}` : clear();
+    } else if (operatorsStr.includes(e.key) && a !== '') {
         operator = e.key;
         input.textContent = operator;
         equation.textContent = `${parseNum(a)}${operator}`;
     } else if (digitsStr.includes(e.key) && operator !== '') {
         b += e.key;
         b = parseNum(b);
-        calculateBtn.disabled = false;
+        input.textContent = b;
         equation.textContent = `${a}${operator}${b}`;
-    } else if (a !== '' && operatorsStr.includes(e.key)) {
-        operator = e.key;
-        equation.textContent = `${a}${operator}`
-    } else if (digitsStr.includes(e.key) || e.key === '-') {
+        calculateBtn.disabled = false;
+    } else if (a === '' && e.key === '-') {
+        a = '-';
+        input.textContent = a; 
+        equation.textContent = a;
+        console.log(e.key);
+    } else if (digitsStr.includes(e.key)) {
         a += e.key;
         a = parseNum(a);
-        input.textContent = a;
-    } else if (e.key === 'Backspace') {
-        console.log(`00 ${e.key}`);
-        undo();
+        input.textContent = a; 
+        equation.textContent = a;
     }
- }
-
+}
+/*
 function inputEquation(e) {
 
 
@@ -108,7 +112,11 @@ function inputEquation(e) {
     calculateBtn.disabled = true;
 
     if (isOperator(e)) {
-        if (b === '') { 
+        if (a === '') {
+            a = '-';
+            input.textContent = a;
+            equation.textContent = a;
+        } else if (b === '') { 
                 operator = this.textContent;
                 input.textContent = operator;
                 equation.textContent = `${parseNum(a)}${operator}`;
@@ -117,7 +125,7 @@ function inputEquation(e) {
 
             operator = this.textContent;
             input.textContent = operator;
-            equation.textContent = `${parseNum(a)}${operator}`;
+            //equation.textContent = `${parseNum(a)}${operator}`;
         }
     } else {
         if (this.textContent === '.') {
@@ -157,12 +165,54 @@ function inputEquation(e) {
         }
     }
 }
+*/
+
+function inputEquation(e) {
+    function isOperator(e) {
+        return operators.includes(e.target);
+    }
+
+    calculateBtn.disabled = true;
+
+    if (isOperator(e) && b !== '') {
+        calculate();
+        operator = this.textContent;
+        input.textContent = operator;
+        equation.textContent = isFinite(parseNum(a)) ?`${parseNum(a)}${operator}` : clear();
+    } else if (isOperator(e) && a !== '') {
+        operator = this.textContent;
+        input.textContent = operator;
+        equation.textContent = `${parseNum(a)}${operator}`;
+    } else if (operator !== '') {
+        b += this.textContent;
+        b = parseNum(b);
+        input.textContent = b;
+        equation.textContent = `${a}${operator}${b}`;
+
+        calculateBtn.disabled = false;
+    } else if (a === '' && this.textContent === '-') {
+        a = '-';
+        input.textContent = a; 
+        equation.textContent = a;
+    } else {
+        a += this.textContent;
+        a = parseNum(a);
+        input.textContent = a; 
+        equation.textContent = a;
+    }
+}
 
 function calculate() {
-    result.textContent = operate(a,operator,b);
-    a = result.textContent;
-    operator = '';
-    b = '';
+    result.textContent = operate(a,operator,b); 
+
+    if (isFinite(result.textContent)) {
+        result.textContent;
+        a = result.textContent;
+        operator = '';
+        b = '';
+    }  else {
+        clear();
+    }
 }
 
 function undo () {
@@ -178,6 +228,15 @@ function undo () {
     }
 }
 
+function clear() {
+    a = '';
+    operator = '';
+    b = '';
+    input.textContent = '';
+    equation.textContent = '';
+    result.textContent = '';
+}
+
 undoBtn.addEventListener('click', () => {
     undo();
 })
@@ -185,13 +244,9 @@ calculateBtn.addEventListener('click', () => {
 calculate();
 calculateBtn.disabled = true;
 });
+
 clearBtn.addEventListener('click', () => {
-    a = '';
-    operator = '';
-    b = '';
-    input.textContent = '';
-    equation.textContent = '';
-    result.textContent = '';
-});
+    clear();
+})
 
 
