@@ -1,12 +1,8 @@
 let calculator = document.querySelector('#js-calculator');
 let input = document.querySelector('#js-input');
-//let digits1 = Array.from(document.querySelector('.js-digits').children);
-//let digits2 = Array.from(document.querySelector('.digits-bottom-row').children);
-//let digits = [...digits1, ...digits2];
-let digits = Array.from(document.querySelector('.js-digits').querySelectorAll('*'));
+let digits = Array.from(document.querySelector('.js-digits').querySelectorAll('button'));
 let point = document.querySelector('#js-point');
 let operators = Array.from(document.querySelector('.js-operators').children);
-let result = document.querySelector('#js-result');
 let calculateBtn = document.querySelector('#js-calculate');
 let clearBtn = document.querySelector('#js-clear');
 let undoBtn = document.querySelector('#js-undo');
@@ -33,7 +29,7 @@ function operate(a, operator, b) {
             return add(a, b);
         case '-':
             return substract(a, b);
-        case '*':
+        case 'x':
             return multiply(a, b);
         case '/':
             return divide(a, b);
@@ -56,7 +52,12 @@ function parseNum(str) {
     let decimal = str.substr(str.lastIndexOf('.'), 2);
 
     if (str.includes('.')) {
-        str = parseInt(str) + decimal;
+        if (str.startsWith('.')) {
+            str = '0.';
+        }
+        else {
+            str = parseInt(str) + decimal;
+        }
     } else {
         str = parseInt(str) + '';
     }
@@ -64,31 +65,35 @@ function parseNum(str) {
     return str;
 }
 
-function inputEquationKeys(e) {
-    let digitsStr = [];
-    let operatorsStr = [];
-    digits.forEach(i => digitsStr.push(i.textContent));
-    operators.forEach(i => operatorsStr.push(i.textContent));
+let digitsStr = [];
+let operatorsStr = [];
+digits.forEach(i => digitsStr.push(i.textContent));
+operators.forEach(i => operatorsStr.push(i.textContent));
 
-    if (e.key === '=') {
-        calculate();
-        calculateBtn.disabled = true;
+function inputEquationKeys(e) {
+    if (e.key === '*') {
+        operator = 'x';
+        input.textContent = operator;
+        equation.textContent = `${a} ${operator} ${b}`;
+    } else if (e.key === '=') {    
+        input.textContent = operate(a, operator, b);
+        equation.textContent = `${a} ${operator} ${b} =`;
     } else if (e.key === 'Backspace') {
         undo();
     } else if (operatorsStr.includes(e.key) && b !== '') {
         calculate();
         operator = e.key;
         input.textContent = operator;
-        equation.textContent = isFinite(parseNum(a)) ?`${parseNum(a)}${operator}` : clear();
+        equation.textContent = isFinite(parseNum(a)) ?`${parseNum(a)} ${operator}` : clear();
     } else if (operatorsStr.includes(e.key) && a !== '') {
         operator = e.key;
         input.textContent = operator;
-        equation.textContent = `${parseNum(a)}${operator}`;
+        equation.textContent = `${parseNum(a)} ${operator}`;
     } else if (digitsStr.includes(e.key) && operator !== '') {
         b += e.key;
         b = parseNum(b);
         input.textContent = b;
-        equation.textContent = `${a}${operator}${b}`;
+        equation.textContent = `${a} ${operator} ${b}`;
 
         calculateBtn.disabled = false;
     } else if (a === '' && e.key === '-') {
@@ -103,35 +108,31 @@ function inputEquationKeys(e) {
     }
 }
 
-
-function inputEquation(e) {
-    function isOperator(e) {
-        return operators.includes(e.target);
-    }
-
-    calculateBtn.disabled = true;
-
-    if (isOperator(e) && b !== '') {
+function inputEquation() {
+    if (this.textContent === '=') {
+        calculate();
+        calculateBtn.disabled = true;
+    } else if (operatorsStr.includes(this.textContent) && b !== '') {
         calculate();
         operator = this.textContent;
         input.textContent = operator;
-        equation.textContent = isFinite(parseNum(a)) ?`${parseNum(a)}${operator}` : clear();
-    } else if (isOperator(e) && a !== '') {
+        equation.textContent = isFinite(parseNum(a)) ?`${parseNum(a)} ${operator}` : clear();
+    } else if (operatorsStr.includes(this.textContent) && a !== '') {
         operator = this.textContent;
         input.textContent = operator;
-        equation.textContent = `${parseNum(a)}${operator}`;
-    } else if (operator !== '') {
+        equation.textContent = `${parseNum(a)} ${operator} `;
+    } else if (digitsStr.includes(this.textContent) && operator !== '') {
         b += this.textContent;
         b = parseNum(b);
         input.textContent = b;
-        equation.textContent = `${a}${operator}${b}`;
+        equation.textContent = `${a} ${operator} ${b} `;
 
         calculateBtn.disabled = false;
     } else if (a === '' && this.textContent === '-') {
         a = '-';
         input.textContent = a; 
         equation.textContent = a;
-    } else {
+    } else if (digitsStr.includes(this.textContent)) {
         a += this.textContent;
         a = parseNum(a);
         input.textContent = a; 
@@ -140,29 +141,36 @@ function inputEquation(e) {
 }
 
 function calculate() {
-    result.textContent = operate(a,operator,b); 
 
-    if (isFinite(result.textContent)) {
-        result.textContent;
-        a = result.textContent;
+    input.textContent = operate(a,operator,b); 
+    equation.textContent = `${equation.textContent} =`;
+
+    if (isFinite(input.textContent)) {
+        input.textContent;
+        a = input.textContent;
         operator = '';
         b = '';
-        input.textContent = '';
     }  else {
         clear();
     }
+
+
 }
 
 function undo () {
-    equation.textContent = equation.textContent.slice(0, -1);
-    input.textContent = input.textContent.slice(0, -1);
-
-    if(operator === '') {
-        a = a.slice(0, -1);
-    } else if (b === '') {
-        operator = '';
+    if (equation.textContent.includes('=')) {
+        clear();
     } else {
-        b = b.slice(0, -1);
+        equation.textContent = equation.textContent.slice(0, -1);
+        input.textContent = input.textContent.slice(0, -1);
+    
+        if(operator === '') {
+            a = a.slice(0, -1);
+        } else if (b === '') {
+            operator = '';
+        } else {
+            b = b.slice(0, -1);
+        }
     }
 }
 
@@ -172,16 +180,18 @@ function clear() {
     b = '';
     input.textContent = '';
     equation.textContent = '';
-    result.textContent = '';
 }
 
 undoBtn.addEventListener('click', () => {
     undo();
 })
+
+
 calculateBtn.addEventListener('click', () => {
-calculate();
-calculateBtn.disabled = true;
+    calculate();
+    calculateBtn.disabled = true;
 });
+
 clearBtn.addEventListener('click', () => {
     clear();
 })
