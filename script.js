@@ -48,9 +48,10 @@ input.addEventListener('input', inputEquation);
 
 window.addEventListener('keydown', inputEquationKeys);
 
+
 function parseNum(str) {
     let decimal = str.substr(str.lastIndexOf('.'), 2);
-
+    
     if (str.includes('.')) {
         if (str.startsWith('.')) {
             str = '0.';
@@ -61,52 +62,83 @@ function parseNum(str) {
     } else {
         str = parseInt(str) + '';
     }
-
     return str;
 }
 
 let digitsStr = [];
-let operatorsStr = [];
+let operatorsStr = ['*'];
 digits.forEach(i => digitsStr.push(i.textContent));
 operators.forEach(i => operatorsStr.push(i.textContent));
 
 function inputEquationKeys(e) {
-    if (e.key === '*') {
-        operator = 'x';
-        input.textContent = operator;
-        equation.textContent = `${a} ${operator} ${b}`;
-    } else if (e.key === '=') {    
-        input.textContent = operate(a, operator, b);
-        equation.textContent = `${a} ${operator} ${b} =`;
-    } else if (e.key === 'Backspace') {
-        undo();
-    } else if (operatorsStr.includes(e.key) && b !== '') {
-        calculate();
-        operator = e.key;
-        input.textContent = operator;
-        equation.textContent = isFinite(parseNum(a)) ?`${parseNum(a)} ${operator}` : clear();
-    } else if (operatorsStr.includes(e.key) && a !== '') {
-        operator = e.key;
-        input.textContent = operator;
-        equation.textContent = `${parseNum(a)} ${operator}`;
-    } else if (digitsStr.includes(e.key) && operator !== '') {
-        b += e.key;
-        b = parseNum(b);
-        input.textContent = b;
-        equation.textContent = `${a} ${operator} ${b}`;
 
-        calculateBtn.disabled = false;
-    } else if (a === '' && e.key === '-') {
-        a = '-';
-        input.textContent = a; 
-        equation.textContent = a;
-    } else if (digitsStr.includes(e.key)) {
-        a += e.key;
-        a = parseNum(a);
-        input.textContent = a; 
-        equation.textContent = a;
-    }
-}
+    if (e.key === 'Backspace') {
+        console.log(`00 ${e.key}`);
+        undo();
+    } else if (e.key === '=') {
+            operator === '*' ? input.textContent = operate(a, 'x', b) : input.textContent = operate(a, operator, b);
+
+            if (isFinite(parseFloat(input.textContent))) {
+                operator === '*' ? equation.textContent = `${a} x ${b} =` : equation.textContent = `${a} ${operator} ${b} =`;
+            } else {
+                clear();
+            }
+
+    } else if (operatorsStr.includes(e.key) && b !== '') {
+        operator === '*' ? input.textContent = operate(a, 'x', b) : input.textContent = operate(a, operator, b);
+
+        if (isFinite(parseFloat(input.textContent))) {
+            operator === '*' ? equation.textContent = `${a} x ${b} =` 
+            : equation.textContent = `${a} ${operator} ${b} =`;
+            a = input.textContent;
+
+            b = '';
+
+            operator = e.key;
+
+            operator === '*' ? input.textContent = 'x' : input.textContent = operator;
+            operator === '*' ? equation.textContent = `${a} x ` : equation.textContent = `${a} ${operator}`;
+        } else {
+            clear();
+        }
+
+    } else if (digitsStr.includes(e.key) && operator !== '') {
+        if (operator === '*') {
+            b += e.key;
+            b = parseNum(b);
+            calculateBtn.disabled = false;
+            equation.textContent = `${a} x ${b}`;
+        } else {
+            b += e.key;
+            b = parseNum(b);
+            calculateBtn.disabled = false;
+            equation.textContent = `${a} ${operator} ${b}`;
+        }
+    } else if (a !== '' && operatorsStr.includes(e.key)) {
+        if (e.key === '*') {
+            operator = e.key;
+            input.textContent = 'x';
+            equation.textContent = `${a} x`;
+        } else {
+            operator = e.key;
+            input.textContent = e.key;
+            equation.textContent = `${a} ${operator}`
+        }
+    } else if (digitsStr.includes(e.key) || e.key === '-') {
+        if (e.key === '-') {
+            a = 0;
+            operator = '-';
+            equation.textContent = `${a} ${operator}`;
+            input.textContent = `${a} ${operator}`;
+        } else {
+            a += e.key;
+            a = parseNum(a);
+            input.textContent = a; 
+            equation.textContent = a;
+        }
+    } 
+ }
+
 
 function inputEquation() {
     if (this.textContent === '=') {
@@ -128,15 +160,18 @@ function inputEquation() {
         equation.textContent = `${a} ${operator} ${b} `;
 
         calculateBtn.disabled = false;
-    } else if (a === '' && this.textContent === '-') {
-        a = '-';
-        input.textContent = a; 
-        equation.textContent = a;
-    } else if (digitsStr.includes(this.textContent)) {
-        a += this.textContent;
-        a = parseNum(a);
-        input.textContent = a; 
-        equation.textContent = a;
+    } else if (operator === '' && digitsStr.includes(this.textContent) || this.textContent === '-') {
+        if (this.textContent === '-') {
+            a = 0;
+            operator = '-';
+            equation.textContent = `${a} ${operator}`;
+            input.textContent = `${a} ${operator}`;
+        } else {
+            a += this.textContent;
+            a = parseNum(a);
+            input.textContent = a; 
+            equation.textContent = a;
+        }
     }
 }
 
@@ -153,15 +188,13 @@ function calculate() {
     }  else {
         clear();
     }
-
-
 }
 
 function undo () {
-    if (equation.textContent.includes('=')) {
+    if (equation.textContent.includes('=') || a === '0') {
         clear();
     } else {
-        equation.textContent = equation.textContent.slice(0, -1);
+        equation.textContent = equation.textContent.slice(0, -2);
         input.textContent = input.textContent.slice(0, -1);
     
         if(operator === '') {
