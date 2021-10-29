@@ -1,2 +1,2 @@
 # calculator
-simple JS calculator
+simple JS calculator, but pink 💗
