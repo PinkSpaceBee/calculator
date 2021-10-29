@@ -8,11 +8,11 @@
     </head>
     <body>
         <div id="js-calculator">
-            <div id="js-equation"></div>
-            <div id="js-input"></div>
-            <div id="js-result"></div>
+            <div class="display">
+                <div id="js-equation"></div>
+                <div id="js-input"></div>
+            </div>
             <div class="js-digits">
-                <button>0</button>
                 <button>1</button>            
                 <button>2</button>
                 <button>3</button>
@@ -22,18 +22,21 @@
                 <button>7</button>
                 <button>8</button>
                 <button>9</button>
-                <button id="js-point">.</button>
+                <div class="digits-bottom-row"> 
+                    <button id="js-point">.</button>
+                    <button id="test">0</button>
+                </div>
             </div>
             <div class="js-operators">
-                <button>+</button>
+                <button>/</button>
+                <button id="js-mul">x</button>
                 <button>-</button>
-                <button>*</button>
-                <button>/</button>              
+                <button>+</button>              
             </div>
             <div class="js-control-buttons">
-                <button id="js-clear">Clear</button>
+                <button id="js-undo">C</button>
+                <button id="js-clear">AC</button>
                 <button id="js-calculate">=</button>
-                <button id="js-undo">undo</button>
             </div>
         </div>
     </body>
